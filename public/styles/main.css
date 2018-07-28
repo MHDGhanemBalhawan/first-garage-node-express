@@ -197,7 +197,7 @@ div.about-top, .about p, .about-bottom p, .serviceman p, .about-text ul,.about-t
 }
 div.about-text ul {
 		padding: 0px;
-		-webkit-padding-start:: 0px;
+		-webkit-padding-start: 0px;
 } 
 .car-image-about {
 	border-radius: 50%;
