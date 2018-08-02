@@ -19,7 +19,10 @@
   "dependencies": {
     "express": "^4.16.3",
     "express-formidable": "^1.0.0",
-    "express-handlebars": "^3.0.0"
+    "express-handlebars": "^3.0.0",
+    "body-parser": "^1.18.3",
+    "lodash": "^4.17.10",
+    "morgan": "^1.9.0"
   },
   "devDependencies": {
     "nodemon": "^1.18.3"

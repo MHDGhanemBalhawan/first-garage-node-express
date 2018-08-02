@@ -1,20 +1,30 @@
 const express = require("express");
 const app = express();
+const path = require("path");
 const formidable = require("express-formidable");
+const morgan = require("morgan");
 const fs = require("fs");
 const exphbs = require("express-handlebars");
-// const publicPath = path.join(__dirname, "/views");
+const bodyParser = require("body-parser");
 
+app.use(express.static("public", { extensions: ["html"] }));
+// import morgan from "morgan";
+
+app.use(morgan("tiny"));
+
+app.use(bodyParser.json());
+
+// const publicPath = path.join(__dirname, "/views");
+app.set("views", path.join(__dirname, "/views"));
 app.use(express.static("views"));
 
 app.use(formidable());
+
+app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+app.set("view engine", "handlebars");
+
+
 app.use(express.static("public", { extensions: ["html"] }));
-
-
-app.engine('handlebars', exphbs({ defaultLayout: 'main' }));
-app.set('view engine', 'handlebars');
-// app.use("views", path.join(__dirname, "views"));
-
 
 app.get("./styles/main.css", function(req, res) {
   res.send("/styles/main.css");
@@ -24,21 +34,20 @@ app.get("./styles/main.css", function(req, res) {
 app.get("/", function(req, res) {
   res.render("home");
 });
-app.get("/home", function(req, res) {
-  res.render("home");
-});
+
 app.get("/about", function(req, res) {
   res.render("about");
 });
-app.get("/contact", function (req, res) {
-  res.render("contact");
-});
 
-//lesson code
-app.get("contact", (req, res) => {
-  res.json(fs.readFileSync(__dirname + "./data/posts.json", utf8));
-});
-app.post("contact", (req, res) => {
+app.get("/contact", function(req, res) {
+  res.render("contact");
+  // });
+
+  // //lesson code
+  // app.get("contact", (req, res) => {
+  // res.json(fs.readFileSync(__dirname + "./data/posts.json", utf8));
+  // });
+  // app.post("contact", (req, res) => {
   const pathPostsFile = __dirname + "./data/posts.json";
   const allposts = JSON.parse(fs.readFileSync(pathPostsFile).toString());
 
