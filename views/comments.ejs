@@ -1,0 +1,33 @@
+
+  
+        <%- include('partials/header') %>
+<div class="container">
+
+<div class="list-group">
+    <!-- loop over blog posts and render them -->
+    <% comments.forEach((comment) => { %>
+        <a href="/comments/<%= comment.id %>" class="list-group-item">
+            <p class="list-group-item-text">
+                <%= comment.id %>
+            </p>
+            <h4 class="list-group-item-heading">
+                <%= comment.firstName %>
+            </h4>
+            <p class="list-group-item-text">
+                <%= comment.lastName %>
+            </p>
+            <p class="list-group-item-text">
+                <%= comment.email %>
+            </p>
+            <p class="list-group-item-text">
+                <%= comment.telephone %>
+            </p>
+            <p class="list-group-item-text">
+                <%= comment.subject %>
+            </p>
+        </a>
+        <% }) %>
+</div>
+
+</div>
+            <%- include('partials/footer') %>

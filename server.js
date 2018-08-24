@@ -6,23 +6,35 @@ const morgan = require("morgan");
 const fs = require("fs");
 const exphbs = require("express-handlebars");
 const bodyParser = require("body-parser");
+// const fs = require("fs");
+
+var comments = require("./api/comments.js");
+
+//import comments from "/data/comments.js";
+console.log(comments);
+app.get("/api/comments", function(req, res) {
+  res.status(200).json({ comments });
+});
 
 app.use(express.static("public", { extensions: ["html"] }));
 // import morgan from "morgan";
+
+// app.use(bodyParser.json);
+// app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(morgan("tiny"));
 
 app.use(bodyParser.json());
 
-// const publicPath = path.join(__dirname, "/views");
-app.set("views", path.join(__dirname, "/views"));
+const publicPath = path.join(__dirname, "/views");
+app.set("view engine", "ejs");
+// app.set("views", path.join(__dirname, "./views"));
 app.use(express.static("views"));
 
 app.use(formidable());
 
-app.engine("handlebars", exphbs({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
-
+// app.engine("handlebars", exphbs({ defaultLayout: "main" }));
+// app.set("view engine", "handlebars");
 
 app.use(express.static("public", { extensions: ["html"] }));
 
@@ -31,25 +43,60 @@ app.get("./styles/main.css", function(req, res) {
   // res.end();
 });
 
+app.get("/comment", function(req, res) {
+  res.render("comment");
+});
+
+app.get("/comments", function(req, res) {
+
+  res.render("comments", {comments:comments}
+);
+});
+
+app.get("/comments/:id", (req, res) => {
+  // find the post in the `posts` array
+  const comment = comments.filter( comment => {
+    return comment.id == req.params.id;
+  })[0];
+
+  // render the `post.ejs` template with the post content
+  res.render("comment", {
+    id: comment.id,
+    firstName: comment.firstName,
+    lastName: comment.lastName,
+    email: comment.email,
+    telephone: comment.telephone,
+    subject: comment.subject
+  });
+});
+
 app.get("/", function(req, res) {
-  res.render("home");
+  res.render("index");
 });
 
 app.get("/about", function(req, res) {
   res.render("about");
 });
 
-app.get("/contact", function(req, res) {
-  res.render("contact");
-  // });
+const pathPostsFile = __dirname + "/data/posts.json";
+const allposts = JSON.parse(fs.readFileSync(pathPostsFile).toString());
 
-  // //lesson code
-  // app.get("contact", (req, res) => {
-  // res.json(fs.readFileSync(__dirname + "./data/posts.json", utf8));
-  // });
-  // app.post("contact", (req, res) => {
-  const pathPostsFile = __dirname + "./data/posts.json";
-  const allposts = JSON.parse(fs.readFileSync(pathPostsFile).toString());
+// console.log(allposts);
+
+app.get("/contact", function(req, res) {
+  //  var contactPosts = allposts;
+  res.render("contact", {
+    // firstName: allposts.firstName,
+    // lastName: allposts.lastName,
+    // telephone: allposts.telephone,
+    // email: allposts.email,
+    // subject: allposts.subject
+  });
+  res.render("contact");
+});
+
+app.post("/contact/add", (req, res) => {
+  //   console.log(req.fields);
 
   const post = req.fields;
   allposts.push(post);
